@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 800px">
+        <div class="jumbotron">
+            <div class="row">
+                {% for post in posts %}
+                    <div class="col-md-6">
+                        <div class="thumbnail">
+                            <h4>{{ post.user.username }} <span class="pull-right">{{ post.created_at|date:"D, d M Y" }}</span></h4>
+                            {% if post.username != 'grigory51' %}
+                                <img src="{{ post.image.url }}">
+                            {% else %}
+                                <h5>Заблокировано Роскомнадзором</h5>
+                            {% endif %}
+                            <div class="caption">
+                                <p>{{ post.text }}</p>
+                                <p><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-heart"></span>{{ post.likes_count }}</a></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
