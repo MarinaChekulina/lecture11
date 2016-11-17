@@ -39,3 +39,4 @@ dist/
 .DS_Store
 
 media
+.idea
