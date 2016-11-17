@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container" style="width: 500px">
+        <div class="jumbotron">
+            <div class="row" style="margin-bottom: 20px">
+                <form class="form-inline" style="width: 100%">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="query" placeholder="Поиск" value="{{ query }}"
+                               style="width: 305px">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Найти</button>
+                </form>
+            </div>
+            <div class="row">
+                <table class="table table-hover">
+                    {% for list_user, subscribed in users %}
+                        <tr>
+                            <td><img class="img-circle" src="{{ list_user.avatar.url }}" width="50px"></td>
+                            <td style="line-height: 3.3">
+                                <strong>
+                                    <a href="{% url 'profile' username=list_user.username %}">
+                                        {{ list_user.username }}
+                                    </a>
+                                </strong>
+                            </td>
+                            <td>
+                                {% if user != list_user %}
+                                    {% if subscribed %}
+                                        <form method="POST" class="subscribe-form" action="{% url 'unsubscribe' user_id=list_user.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Отписаться</button>
+                                        </form>
+                                    {% else %}
+                                        <form method="POST" class="subscribe-form" action="{% url 'subscribe' user_id=list_user.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success">Подписаться</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td>Пользователи не найдены</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

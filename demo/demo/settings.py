@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'feed',
-    'mysql'
+    'bootstrapform',
+    'mysql',
+    'users'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,3 +126,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = 'login'

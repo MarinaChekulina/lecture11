@@ -6,21 +6,49 @@
     <div class="container" style="max-width: 800px">
         <div class="jumbotron">
             <div class="row">
-                {% for post in posts %}
-                    <div class="col-md-6">
+                {% for post, liked in posts %}
+                    <div class="col-md-12">
                         <div class="thumbnail">
-                            <h4>{{ post.user.username }} <span class="pull-right">{{ post.created_at|date:"D, d M Y" }}</span></h4>
-                            {% if post.username != 'grigory51' %}
-                                <img src="{{ post.image.url }}">
-                            {% else %}
-                                <h5>Заблокировано Роскомнадзором</h5>
-                            {% endif %}
+                            <h4 style="padding: 0 10px">
+                                <img src="{{ post.user.avatar.url }}" width="30px" class="img-circle avatar-small">
+                                <a href="{% url 'profile' username=post.user.username %}">{{ post.user.username }}</a>
+                                <span class="pull-right">{{ post.created_at|date:"D, d M Y" }}</span>
+                            </h4>
+                            <img src="{{ post.image.url }}">
                             <div class="caption">
                                 <p>{{ post.text }}</p>
-                                <p><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-heart"></span>{{ post.likes_count }}</a></p>
+                                <ul class="list-unstyled">
+                                    {% for comment in post.comments.all %}
+                                        <li><strong>{{ comment.user.username }}</strong> {{ comment.text }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <p>
+                                <form method="POST" class="like-form"
+                                      action="{% url 'like' post_id=post.id %}">
+                                    {% csrf_token %}
+                                    {% if liked %}
+                                        <input type="hidden" name="delete" value="True">
+                                    {% endif %}
+                                    <button type="submit"
+                                            class="btn {% if liked %}btn-danger{% else %}btn-success{% endif %}">
+                                        <span class="glyphicon glyphicon-heart"></span> {{ post.likes_count }}
+                                    </button>
+                                </form>
+                                <form class="form-inline comment-form" method="POST"
+                                      action="{% url 'add_comment' post_id=post.id %}">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="comment"
+                                               placeholder="Комментарий" style="width: 460px" required="required">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Отправить</button>
+                                </form>
+                                </p>
                             </div>
                         </div>
                     </div>
+                {% empty %}
+                    <h2>Ваша лента пуста!</h2>
                 {% endfor %}
             </div>
         </div>

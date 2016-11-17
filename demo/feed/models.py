@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import User
 
 
 class Post(models.Model):
@@ -18,6 +18,9 @@ class Post(models.Model):
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
 
+    def liked_by(self, user):
+        return Like.objects.filter(post=self, user=user).exists()
+
 
 class Like(models.Model):
     post = models.ForeignKey(Post)
@@ -25,3 +28,13 @@ class Like(models.Model):
 
     def __str__(self):
         return '{0} {1}'.format(self.post, self.user)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, related_name='comments')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
+    class Meta:
+        ordering = ('created_at', )

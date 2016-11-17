@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block content %}
+    <div class="container">
+        <h1>Вход</h1>
+        <form method="POST" role="form">
+            {% csrf_token %}
+            {{ form|bootstrap }}
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Войти</button>
+                <a href="{% url "registration" %}" class="btn btn-primary">Регистрация</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
